@@ -17,6 +17,10 @@ bash scripts/derive.sh   # every derived file below, from the .nwb
 Both honour `ARGUS_DATA_DIR` (default `~/argus_data`); `derive.sh` also takes
 `ARGUS_WS` and `ARGUS_CODEC` for the workspace and codec checkouts.
 
+The repo's own check is `shellcheck scripts/*.sh`, which is what CI runs. The
+whole stack, and the one command that runs it on the board, is described in
+[argus_bringup/README.md](https://github.com/Max-Gabriel-Susman/argus_bringup/blob/main/README.md).
+
 ## Source: session `indy_20161005_06`
 
 Both raw files are session `indy_20161005_06` from *Nonhuman Primate Reaching
@@ -53,9 +57,11 @@ MATLAB v7.3, i.e. HDF5, read with `h5py`:
 | `spikes`      | n × u   | Spike time vectors per channel per unit     |
 | `wf`          | n × u   | Spike waveform snippets, µV                 |
 
-`argus_inference`'s `inference_node` loads this at startup, bins spike times,
-derives 4-way intent labels from the cursor-to-target vector, and fits an
-LDA-over-StandardScaler pipeline. It never leaves the host — training data,
+Without a saved model, `argus_inference`'s `inference_node` loads this at
+startup, bins spike times, derives 4-way intent labels from the
+cursor-to-target vector, and fits an LDA-over-StandardScaler pipeline. The
+demo's saved model (`decode_test.py --save-model`) takes its labels from
+here too, and its features from the broadband. It never leaves the host — training data,
 not pipeline input.
 
 ### `indy_20161005_06_broadband.nwb` — acquisition-path source
