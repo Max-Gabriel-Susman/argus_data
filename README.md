@@ -17,8 +17,9 @@ bash scripts/derive.sh   # every derived file below, from the .nwb
 Both honour `ARGUS_DATA_DIR` (default `~/argus_data`); `derive.sh` also takes
 `ARGUS_WS` and `ARGUS_CODEC` for the workspace and codec checkouts.
 
-The repo's own check is `shellcheck scripts/*.sh`, which is what CI runs. The
-whole stack, and the one command that runs it on the board, is described in
+The repo's own checks are `shellcheck scripts/*.sh` and each script's
+`--help`; CI runs both. The whole stack, and the one command that runs it on
+the board, is described in
 [argus_bringup/README.md](https://github.com/Max-Gabriel-Susman/argus_bringup/blob/main/README.md).
 
 ## Source: session `indy_20161005_06`
@@ -136,6 +137,29 @@ The decoder trains on the `.mat`. The hardware path is validated with the
 - **None of this transfers to dissociated cultures**, which have no
   behavioural correlate to label.
 
-## CI
+## Documentation
 
-`.github/workflows/ci.yml` runs `shellcheck` and `bash -n` on `scripts/*.sh`.
+Nothing here is generated, because nothing here has an API: this repository
+is a provenance record and two scripts. The record is this README, kept by
+hand: which session, which Zenodo files with which checksums, every derived
+file with the exact command that made it, and what each file can and cannot
+be used for. The scripts document themselves. Each opens with a header that
+says what it does, what it needs and what it makes, and `--help` prints that
+header, so the description and the behaviour live in one file and cannot
+drift apart:
+
+```bash
+bash scripts/fetch.sh --help
+bash scripts/derive.sh --help
+```
+
+Any other argument is refused with a pointer to `--help`; the scripts take
+their settings from the environment (`ARGUS_DATA_DIR`, `ARGUS_WS`,
+`ARGUS_CODEC`), as the header says.
+
+CI keeps this honest: `shellcheck` and `bash -n` run on every push, and so
+does each script's `--help`, which fails the build if a header stops printing
+or stops opening with the script's name and a one-line summary. The
+generated references for the rest of the stack (Sphinx for the Python
+package, Doxygen for the C, C++ and VHDL) are described in each repository's
+own README.
