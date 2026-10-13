@@ -13,3 +13,9 @@ jobs:
         run: shellcheck scripts/*.sh
       - name: bash -n
         run: for f in scripts/*.sh; do bash -n "$f"; done
+      - name: --help prints each script's header
+        run: |
+          for f in scripts/*.sh; do
+            bash "$f" --help | head -1 | grep -q "^$(basename "$f") -- " \
+              || { echo "$f: --help does not open with '$(basename "$f") -- <summary>'"; exit 1; }
+          done

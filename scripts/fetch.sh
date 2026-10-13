@@ -12,6 +12,15 @@
 # it verifies, so an interrupted run never leaves a file that looks complete.
 set -euo pipefail
 
+# --help prints the header above, so what the script says and what it does
+# stay in one file. Nothing else is taken on the command line.
+usage() { sed -n '2,${/^#/!q;s/^#\( \|$\)//p}' "$0"; }
+case ${1:-} in
+  -h|--help) usage; exit 0 ;;
+  '') ;;
+  *) echo "$(basename "$0"): no arguments are taken; see --help" >&2; exit 2 ;;
+esac
+
 DATA_DIR=${ARGUS_DATA_DIR:-$HOME/argus_data}
 
 MAT=indy_20161005_06.mat
